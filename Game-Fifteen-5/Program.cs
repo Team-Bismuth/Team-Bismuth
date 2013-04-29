@@ -4,10 +4,10 @@
 
     public class Program
     {
-        public static int[,] a = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
+        public static int[,] field = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
         public static int x = 3; 
         public static int y = 3;
-        public static bool repeat = true;
+        
         public static int counter;           
         public static string[] topScorers = new string[5];
         public static int topCount = 0;
@@ -25,15 +25,15 @@
                 Console.Write("| ");
                 for (int col = 0; col < FIELD_COLS; col++)
                 {
-                    if (a[row, col] < 10 && a[row, col] != 0)
+                    if (field[row, col] < 10 && field[row, col] != 0)
                     {
-                        Console.Write(" {0} ", a[row, col]);
+                        Console.Write(" {0} ", field[row, col]);
                     }
-                    else if (a[row, col] >= 10)
+                    else if (field[row, col] >= 10)
                     {
-                        Console.Write("{0} ", a[row, col]);
+                        Console.Write("{0} ", field[row, col]);
                     }
-                    else if (a[row, col] == 0)
+                    else if (field[row, col] == 0)
                     {
                             Console.Write("   ");
                     }                
@@ -58,9 +58,9 @@
                     int ny = y;
                     if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
                     {
-                        int temp = a[x, y];
-                        a[x, y] = a[nx, ny];
-                        a[nx, ny] = temp;
+                        int temp = field[x, y];
+                        field[x, y] = field[nx, ny];
+                        field[nx, ny] = temp;
                         x = nx;
                         y = ny;
                     }
@@ -77,9 +77,9 @@
                     int ny = y + 1;
                     if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
                     {
-                        int temp = a[x, y];
-                        a[x, y] = a[nx, ny];
-                        a[nx, ny] = temp;
+                        int temp = field[x, y];
+                        field[x, y] = field[nx, ny];
+                        field[nx, ny] = temp;
                         x = nx;
                         y = ny;
                     }
@@ -96,9 +96,9 @@
                     int ny = y;
                     if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
                     {
-                        int temp = a[x, y];
-                        a[x, y] = a[nx, ny];
-                        a[nx, ny] = temp;
+                        int temp = field[x, y];
+                        field[x, y] = field[nx, ny];
+                        field[nx, ny] = temp;
                         x = nx;
                         y = ny;
                     }
@@ -115,9 +115,9 @@
                     int ny = y - 1;
                     if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
                     {
-                        int temp = a[x, y];
-                        a[x, y] = a[nx, ny];
-                        a[nx, ny] = temp;
+                        int temp = field[x, y];
+                        field[x, y] = field[nx, ny];
+                        field[nx, ny] = temp;
                         x = nx;
                         y = ny;
                     }
@@ -155,7 +155,7 @@
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        if (a[i, j] == n)
+                        if (field[i, j] == n)
                         {
                             k = i;
                             l = j;
@@ -170,16 +170,16 @@
                 }
             }
 
-            bool flag2 = Proverka(k, l);
-            if (!flag2)
+            bool isInField = Proverka(k, l);
+            if (!isInField)
             {
                 Console.WriteLine("Illegal move!");
             }
             else
             {
-                int temp = a[k, l];
-                a[k, l] = a[x, y];
-                a[x, y] = temp;
+                int temp = field[k, l];
+                field[k, l] = field[x, y];
+                field[x, y] = temp;
                 x = k; 
                 y = l;
                 counter++;
@@ -189,18 +189,18 @@
 
         static bool Solved()
         {
-            if (a[3, 3] == 0)
+            if (field[3, 3] == 0)
             {
-                int n = 1;
-                for (int i = 0; i < 4; i++)
+                int number = 1;
+                for (int row = 0; row < FIELD_ROWS; row++)
                 {
-                    for (int j = 0; j < 4; j++)
+                    for (int col = 0; col < FIELD_COLS; col++)
                     {
-                        if (n <= 15)
+                        if (number <= 15)
                         {
-                            if (a[i, j] == n)
+                            if (field[row, col] == number)
                             {
-                                n++;
+                                number++;
                             }
                             else
                             {
@@ -259,7 +259,8 @@
 
         static void Main(string[] args)
         {
-            while (repeat)
+            bool gameInProgress = true;
+            while (gameInProgress)
             {
                 GenerateTable();
                 PrintGameInitializeInfo();
@@ -287,7 +288,7 @@
                         if (command == "exit")
                         {
                             PrintGameAboutInfo();
-                            repeat = false;
+                            gameInProgress = false;
                             break;
                         }
                         else
@@ -321,11 +322,11 @@
                    
                     string nickname = Console.ReadLine();
                   
-                    string res = counter + " moves by " + nickname;
+                    string result = counter + " moves by " + nickname;
 
                     if (topCount < 5)
                     {
-                        topScorers[topCount] = res;
+                        topScorers[topCount] = result;
 
                         topCount++;
 
@@ -333,11 +334,11 @@
                     }
                     else
                     {
-                        for (int i = 4; i >= 0; i++)
+                        for (int i = TOP_SCORES_TO_KEEP - 1; i >= 0; i++)
                         {
-                            if (topScorers[i].CompareTo(res) <= 0)
+                            if (topScorers[i].CompareTo(result) <= 0)
                             {
-                                AddAndSort(i, res);
+                                AddAndSort(i, result);
                             }
                         }
                     }
