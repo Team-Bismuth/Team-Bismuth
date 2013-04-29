@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ConsoleApplication1
+﻿namespace Game_Fifteen
 {
-    class Program
-    {
-        static int[,] a = new int[4, 4] {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,0}};
-        static int x = 3, y = 3;
-        static bool repeat = true;
-        static int broqch;
+    using System;
 
-        
-        
-        
-        static string[] топКандидати = new string[5];
-        static int topCount = 0;
+    public class Program
+    {
+        public static int[,] a = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
+        public static int x = 3; 
+        public static int y = 3;
+        public static bool repeat = true;
+        public static int counter;           
+        public static string[] topScorers = new string[5];
+        public static int topCount = 0;
 
         static void PrintTable()
         {
@@ -27,25 +21,35 @@ namespace ConsoleApplication1
                 for (int j = 0; j < 4; j++)
                 {
                     if (a[i, j] >= 10)
+                    {
                         Console.Write("{0} ", a[i, j]);
+                    }
                     else
-                        if (a [i,j] == 0)
+                    {
+                        if (a[i, j] == 0)
+                        {
                             Console.Write("   ");
+                        }
                         else
-                        Console.Write(" {0} ", a[i, j]);
+                        {
+                            Console.Write(" {0} ", a[i, j]);
+                        }
+                    }
                 }
+
                 Console.WriteLine("|");
             }
+
             Console.WriteLine(" -------------");
         }
 
-        static void GenerateТаблица()
+        static void GenerateTable()
         {
-            broqch = 0;
-            Random r = new Random();
+            counter = 0;
+            Random random = new Random();
             for (int i = 0; i < 1000; i++)
             {
-                int n = r.Next(3);
+                int n = random.Next(3);
                 if (n == 0)
                 {
                     int nx = x - 1;
@@ -64,6 +68,7 @@ namespace ConsoleApplication1
                         i--;
                     }
                 }
+
                 if (n == 1)
                 {
                     int nx = x;
@@ -82,6 +87,7 @@ namespace ConsoleApplication1
                         i--;
                     }
                 }
+
                 if (n == 2)
                 {
                     int nx = x + 1;
@@ -100,6 +106,7 @@ namespace ConsoleApplication1
                         i--;
                     }
                 }
+
                 if (n == 3)
                 {
                     int nx = x;
@@ -120,20 +127,22 @@ namespace ConsoleApplication1
             }
         }
 
-        static bool proverka(int i, int j)
+        public static bool Proverka(int i, int j)
         {
             if ((i == x - 1 || i == x + 1) && j == y)
             {
                 return true;
             }
+
             if ((i == x) && (j == y - 1 || j == y + 1))
             {
                 return true;
             }
+
             return false;
         }
 
-        static void Move(int n)
+        public static void Move(int n)
         {
             int k = x, l = y;
             bool flag = true;
@@ -145,7 +154,8 @@ namespace ConsoleApplication1
                     {
                         if (a[i, j] == n)
                         {
-                            k = i; l = j;
+                            k = i;
+                            l = j;
                             flag = false;
                             break;
                         }
@@ -157,7 +167,7 @@ namespace ConsoleApplication1
                 }
             }
 
-            bool flag2 = proverka(k, l);
+            bool flag2 = Proverka(k, l);
             if (!flag2)
             {
                 Console.WriteLine("Illegal move!");
@@ -169,7 +179,7 @@ namespace ConsoleApplication1
                 a[x, y] = temp;
                 x = k; 
                 y = l;
-                broqch++;
+                counter++;
                 PrintTable();
             }
         }
@@ -201,12 +211,13 @@ namespace ConsoleApplication1
                     }
                 }
             }
+
             return false;
         }
 
         static void RestartGame()
         {
-            GenerateТаблица();
+            GenerateTable();
             PrintTable();
         }
 
@@ -214,13 +225,15 @@ namespace ConsoleApplication1
         {
             if (i == 0)
             {
-                топКандидати[i] = res;
+                topScorers[i] = res;
             }
+
             for (int j = 0; j < i; j++)
             {
-                топКандидати[j] = топКандидати[j + 1];
+                topScorers[j] = topScorers[j + 1];
             }
-            топКандидати[i] = res;
+
+            topScorers[i] = res;
         }
 
         static void PrintTop()
@@ -230,13 +243,14 @@ namespace ConsoleApplication1
             {
                 for (int i = 5 - topCount; i < 5; i++)
                 {
-                    Console.WriteLine("{0}", топКандидати[i]);
+                    Console.WriteLine("{0}", topScorers[i]);
                 }
             }
             else
             {
                 Console.WriteLine("-");
             }
+
             Console.WriteLine();
         }
 
@@ -244,22 +258,21 @@ namespace ConsoleApplication1
         {
             while (repeat)
             {
-                GenerateТаблица();
+                GenerateTable();
                 Console.WriteLine("Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.\n");
                 PrintTable();
-
-                bool flagSolved = Solved();
-                while (!flagSolved)
+                bool isGameSolved = Solved();
+                while (!isGameSolved)
                 {
                     Console.Write("Enter a number to move: ");
-                    string s = Console.ReadLine();
-                    int n;
-                    bool flag = int.TryParse(s, out n);
-                    if (flag)
+                    string command = Console.ReadLine();
+                    int number;
+                    bool isMoveCommand = int.TryParse(command, out number);
+                    if (isMoveCommand)
                     {
-                        if (n >= 1 && n <= 15)
+                        if (number >= 1 && number <= 15)
                         {
-                            Move(n);
+                            Move(number);
                         }
                         else
                         {
@@ -268,7 +281,7 @@ namespace ConsoleApplication1
                     }
                     else
                     {
-                        if (s == "exit")
+                        if (command == "exit")
                         {
                             Console.WriteLine("Good bye!");
                             repeat = false;
@@ -276,13 +289,13 @@ namespace ConsoleApplication1
                         }
                         else
                         {
-                            if (s == "restart")
+                            if (command == "restart")
                             {
                                 RestartGame();
                             }
                             else
                             {
-                                if (s == "top")
+                                if (command == "top")
                                 {
                                     PrintTop();
                                 }
@@ -293,47 +306,39 @@ namespace ConsoleApplication1
                             }
                         }
                     }
-                    flagSolved = Solved();
+
+                    isGameSolved = Solved();
                 }
-                if (flagSolved)
+
+                if (isGameSolved)
                 {
-                    Console.WriteLine("Congratulations! You won the game in {0} moves.", broqch);
+                    Console.WriteLine("Congratulations! You won the game in {0} moves.", counter);
                    
                     Console.Write("Please enter your name for the top scoreboard: ");
                    
-                    string s1 = Console.ReadLine();
+                    string nickname = Console.ReadLine();
                   
-                    string res = broqch + " moves by " + s1;
-                 
+                    string res = counter + " moves by " + nickname;
+
                     if (topCount < 5)
                     {
-                        топКандидати[topCount] = res;
-                 
+                        topScorers[topCount] = res;
+
                         topCount++;
-                 
-               
-                        Array.Sort(топКандидати);
+
+                        Array.Sort(topScorers);
+                    }
+                    else
+                    {
+                        for (int i = 4; i >= 0; i++)
+                        {
+                            if (topScorers[i].CompareTo(res) <= 0)
+                            {
+                                AddAndSort(i, res);
+                            }
+                        }
                     }
 
-
-
-                    else
-
-
-                    
-
-                        for (int i = 4; i >= 0; i++)
-                        
-
-                            if (топКандидати[i].CompareTo(res) <= 0)
-                            
-
-                                AddAndSort(i, res);
-                            
-
-                        
-
-                    
                     PrintTop();
                 }
             }
