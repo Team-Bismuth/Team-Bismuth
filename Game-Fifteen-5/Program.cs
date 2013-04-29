@@ -11,45 +11,47 @@
         public static int counter;           
         public static string[] topScorers = new string[5];
         public static int topCount = 0;
+        private const int TOP_SCORES_TO_KEEP = 5;
+        private const int FIELD_ROWS = 4;
+        private const int FIELD_COLS = 4;
+
+        private static Random randomGenerator = new Random();
 
         static void PrintTable()
         {
-            Console.WriteLine(" -------------");
-            for (int i = 0; i < 4; i++)
+            Console.WriteLine(" ------------- ");
+            for (int row = 0; row < FIELD_ROWS; row++)
             {
                 Console.Write("| ");
-                for (int j = 0; j < 4; j++)
+                for (int col = 0; col < FIELD_COLS; col++)
                 {
-                    if (a[i, j] >= 10)
+                    if (a[row, col] < 10 && a[row, col] != 0)
                     {
-                        Console.Write("{0} ", a[i, j]);
+                        Console.Write(" {0} ", a[row, col]);
                     }
-                    else
+                    else if (a[row, col] >= 10)
                     {
-                        if (a[i, j] == 0)
-                        {
+                        Console.Write("{0} ", a[row, col]);
+                    }
+                    else if (a[row, col] == 0)
+                    {
                             Console.Write("   ");
-                        }
-                        else
-                        {
-                            Console.Write(" {0} ", a[i, j]);
-                        }
-                    }
+                    }                
                 }
 
                 Console.WriteLine("|");
             }
 
-            Console.WriteLine(" -------------");
+            Console.WriteLine(" ------------- ");
         }
 
         static void GenerateTable()
         {
             counter = 0;
-            Random random = new Random();
+
             for (int i = 0; i < 1000; i++)
             {
-                int n = random.Next(3);
+                int n = randomGenerator.Next(3);
                 if (n == 0)
                 {
                     int nx = x - 1;
@@ -144,7 +146,8 @@
 
         public static void Move(int n)
         {
-            int k = x, l = y;
+            int k = x;
+            int l = y;
             bool flag = true;
             for (int i = 0; i < 4; i++)
             {
@@ -259,7 +262,7 @@
             while (repeat)
             {
                 GenerateTable();
-                Console.WriteLine("Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.\n");
+                PrintGameInitializeInfo();
                 PrintTable();
                 bool isGameSolved = Solved();
                 while (!isGameSolved)
@@ -283,7 +286,7 @@
                     {
                         if (command == "exit")
                         {
-                            Console.WriteLine("Good bye!");
+                            PrintGameAboutInfo();
                             repeat = false;
                             break;
                         }
@@ -342,6 +345,25 @@
                     PrintTop();
                 }
             }
+        }
+        private static void PrintGameInitializeInfo()
+        {
+            Console.WriteLine(
+                "Let's play “GAME FIFTEEN”.\n" +
+                "Try to arrange the numbers sequentially from  1 to 15.\n" +
+                "\nCommands :\n" +
+                "\t- \"<number>\": moves this number in the empty space;\n"+
+                "\t- \"top\": shows the top scores;\n" +
+                "\t- \"restart\": starts a new game;\n" +
+                "\t- \"exit\": exits the application.\n");
+        }
+
+        private static void PrintGameAboutInfo()
+        {
+            Console.WriteLine(
+                "\"GAME FIFTEEN\" v1.0\n" +
+                "Copyright 2013 Telerik Academy, Team “Bismuth”.\n" +
+                "All rights reserved.");
         }
     }
 }

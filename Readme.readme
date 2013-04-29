@@ -1,14 +1,29 @@
 High-Quality Code Construction – Game “Fifteen”
-Your task is to write an interactive console-based implementation of the game “Fifteen” in which the player tries to arrange the numbers from 1 to 15 sequentially in a square matrix of size 4 x 4. The game starts from a randomly shuffled 15 numbers in a matrix (4 x 4) and a random cell left empty (see the figure below). At each turn the player enters a number from the matrix, neighbor to the empty cell that should move over it. The game finishes when the numbers are arranged sequentially (see the figure).When the game is finished, a new game automatically starts.
-When the starting position is randomly generated at the program start, your algorithm should ensure that the target position is reachable from the starting positionwith a sequence of legal moves.
+Your task is to write an interactive console-based implementation of the game “Fifteen”
+in which the player tries to arrange the numbers from 1 to 15 sequentially 
+in a square matrix of size 4 x 4. The game starts from a randomly shuffled 15 numbers in a matrix (4 x 4)
+and a random cell left empty (see the figure below). At each turn the player enters a number
+from the matrix, neighbor to the empty cell that should move over it.
+The game finishes when the numbers are arranged sequentially (see the figure).
+When the game is finished, a new game automatically starts.
+When the starting position is randomly generated at the program start,
+your algorithm should ensure that the target position is reachable from the starting position
+with a sequence of legal moves.
  
 The player can request starting a new game by entering the command 'restart'.
-Your program should implement a local top scoreboardwhich keeps the best results and the names of their authors. Initially, at the program start, the scoreboard is empty. It keeps the top 5 results sorted in ascending order by the number of moves. When a game is finished by popping all balloons, the player’s result can enter in the top scoreboard if his or her number of moves is less than some of the other achievements staying in the top scoreboard. When the player’s result enters the scoreboard, the player should enter his or her name or nickname.
+Your program should implement a local top scoreboard which keeps the best results and
+the names of their authors. Initially, at the program start, the scoreboard is empty.
+It keeps the top 5 results sorted in ascending order by the number of moves.
+When a game is finished by popping all balloons, the player’s result can enter in
+the top scoreboard if his or her number of moves is less than some of the other achievements
+staying in the top scoreboard. When the player’s result enters the scoreboard,
+the player should enter his or her name or nickname.
 The player can request printing the top scoreboard during the game by entering the command 'top'.
 The player can request stopping the game and exiting from the program the command 'exit'.
 Example Game Session
 The player’s input is shown in italic:
-Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
+Welcome to the game “15”. Please try to arrange the numbers sequentially. 
+Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
   ------------
  |  1  2  3  4 |
  |  5     7  8 |
@@ -52,7 +67,8 @@ Please enter your name for the top scoreboard: Bay Ivan
 Scoreboard:
 1. Bay Ivan -->4 moves
 
-Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
+Welcome to the game “15”. Please try to arrange the numbers sequentially. 
+Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
   ------------
  |  15 2 12  4 |
  |  5     7  8 |
@@ -61,7 +77,8 @@ Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 't
   ------------
 Enter a number to move: restart
 
-Welcome to the game “15”. Please try to arrange the numbers sequentially. Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
+Welcome to the game “15”. Please try to arrange the numbers sequentially. 
+Use 'top' to view the top scoreboard, 'restart' to start a new game and 'exit' to quit the game.
   ------------
  |  3  8 11  1 |
  | 15 13     5 |
