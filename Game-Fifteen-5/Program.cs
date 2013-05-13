@@ -2,7 +2,7 @@
 {
     using System;
     using System.Text;
-
+    using System.Threading;
     public class Program
     {
         public static int[,] field = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
@@ -179,7 +179,13 @@
             bool isInField = Proverka(k, l);
             if (!isInField)
             {
-                Console.WriteLine("Illegal move!");
+                Console.SetCursorPosition(24, 15);
+                Console.Write("Illegal move!");
+                Thread.Sleep(1000);
+                Console.SetCursorPosition(24, 15);
+                Console.Write("             ");
+                Console.SetCursorPosition(0, 15);
+                Thread.Sleep(0);
             }
             else
             {
@@ -279,7 +285,7 @@
                     int number = 0;
 
                     Console.SetCursorPosition(24, 15);
-                    Console.Write("  ");
+                    Console.Write(new string(' ',command.Length));
 
                     bool isMoveCommand = int.TryParse(command, out number);
                     if (isMoveCommand)
@@ -290,8 +296,13 @@
                         }
                         else
                         {
-                            
+                            Console.SetCursorPosition(24, 15);
                             Console.Write("Illegal move!");
+                            Thread.Sleep(1000);
+                            Console.SetCursorPosition(24, 15);
+                            Console.Write("             ");
+                            Console.SetCursorPosition(0, 15);
+                            Thread.Sleep(0);
                         }
                     }
                     else
@@ -312,7 +323,13 @@
                         }
                         else
                         {
-                            Console.WriteLine("Illegal command!");
+                            Console.SetCursorPosition(24, 15);
+                            Console.Write("Illegal command!");
+                            Thread.Sleep(1000);
+                            Console.SetCursorPosition(24, 15);
+                            Console.Write("                ");
+                            Console.SetCursorPosition(0, 15);
+                            Thread.Sleep(0);
                         }
                     }
 
