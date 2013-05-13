@@ -1,14 +1,15 @@
 ﻿namespace Game_Fifteen
 {
     using System;
+    using System.Text;
 
     public class Program
     {
         public static int[,] field = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
-        public static int x = 3; 
+        public static int x = 3;
         public static int y = 3;
-        
-        public static int counter;           
+
+        public static int counter;
         public static string[] topScorers = new string[5];
         public static int topCount = 0;
         private const int TOP_SCORES_TO_KEEP = 5;
@@ -19,30 +20,35 @@
 
         static void PrintTable()
         {
-            Console.WriteLine(" ------------- ");
+            StringBuilder printer = new StringBuilder();
+            printer.AppendLine(" ------------- ");
             for (int row = 0; row < FIELD_ROWS; row++)
             {
-                Console.Write("| ");
+                printer.Append("| ");
                 for (int col = 0; col < FIELD_COLS; col++)
                 {
                     if (field[row, col] < 10 && field[row, col] != 0)
                     {
-                        Console.Write(" {0} ", field[row, col]);
+                        printer.AppendFormat(" {0} ", field[row, col]);
                     }
                     else if (field[row, col] >= 10)
                     {
-                        Console.Write("{0} ", field[row, col]);
+                        printer.AppendFormat("{0} ", field[row, col]);
                     }
                     else if (field[row, col] == 0)
                     {
-                            Console.Write("   ");
-                    }                
+                        printer.AppendFormat("   ");
+                    }
                 }
 
-                Console.WriteLine("|");
+                printer.AppendLine("|");
             }
 
-            Console.WriteLine(" ------------- ");
+            printer.AppendLine(" ------------- ");
+
+            Console.SetCursorPosition(0, 9);
+            Console.Write(printer.ToString());
+
         }
 
         static void GenerateTable()
@@ -180,7 +186,7 @@
                 int temp = field[k, l];
                 field[k, l] = field[x, y];
                 field[x, y] = temp;
-                x = k; 
+                x = k;
                 y = l;
                 counter++;
                 PrintTable();
@@ -224,11 +230,11 @@
             PrintTable();
         }
 
-        static void AddAndSort(int i, string res)
+        static void AddAndSort(int i, string result)
         {
             if (i == 0)
             {
-                topScorers[i] = res;
+                topScorers[i] = result;
             }
 
             for (int j = 0; j < i; j++)
@@ -236,7 +242,7 @@
                 topScorers[j] = topScorers[j + 1];
             }
 
-            topScorers[i] = res;
+            topScorers[i] = result;
         }
 
         static void PrintTop()
@@ -270,7 +276,11 @@
                 {
                     Console.Write("Enter a number to move: ");
                     string command = Console.ReadLine();
-                    int number;
+                    int number = 0;
+
+                    Console.SetCursorPosition(24, 15);
+                    Console.Write("  ");
+
                     bool isMoveCommand = int.TryParse(command, out number);
                     if (isMoveCommand)
                     {
@@ -280,7 +290,8 @@
                         }
                         else
                         {
-                            Console.WriteLine("Illegal move!");
+                            
+                            Console.Write("Illegal move!");
                         }
                     }
                     else
@@ -291,23 +302,17 @@
                             gameInProgress = false;
                             break;
                         }
+                        else if (command == "restart")
+                        {
+                            RestartGame();
+                        }
+                        else if (command == "top")
+                        {
+                            PrintTop();
+                        }
                         else
                         {
-                            if (command == "restart")
-                            {
-                                RestartGame();
-                            }
-                            else
-                            {
-                                if (command == "top")
-                                {
-                                    PrintTop();
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Illegal command!");
-                                }
-                            }
+                            Console.WriteLine("Illegal command!");
                         }
                     }
 
@@ -317,11 +322,11 @@
                 if (isGameSolved)
                 {
                     Console.WriteLine("Congratulations! You won the game in {0} moves.", counter);
-                   
+
                     Console.Write("Please enter your name for the top scoreboard: ");
-                   
+
                     string nickname = Console.ReadLine();
-                  
+
                     string result = counter + " moves by " + nickname;
 
                     if (topCount < 5)
@@ -353,7 +358,7 @@
                 "Let's play “GAME FIFTEEN”.\n" +
                 "Try to arrange the numbers sequentially from  1 to 15.\n" +
                 "\nCommands :\n" +
-                "\t- \"<number>\": moves this number in the empty space;\n"+
+                "\t- \"<number>\": moves this number in the empty space;\n" +
                 "\t- \"top\": shows the top scores;\n" +
                 "\t- \"restart\": starts a new game;\n" +
                 "\t- \"exit\": exits the application.\n");
