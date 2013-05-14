@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GameFifteenProject
+namespace IgraS15
 {
-    class Player : IComparable
+    public class Player : IComparable
     {
         private string name;
         private int moves;
