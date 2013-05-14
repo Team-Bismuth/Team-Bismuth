@@ -5,11 +5,9 @@
     using System.Threading;
     public class Program
     {
-        public static int[,] field = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
-        public static int x = 3;
-        public static int y = 3;
+        public static int[,] gameField = new int[4, 4] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
 
-        public static int counter;
+        public static int counter=0;
         public static string[] topScorers = new string[5];
         public static int topCount = 0;
         private const int TOP_SCORES_TO_KEEP = 5;
@@ -27,15 +25,15 @@
                 printer.Append("| ");
                 for (int col = 0; col < FIELD_COLS; col++)
                 {
-                    if (field[row, col] < 10 && field[row, col] != 0)
+                    if (gameField[row, col] < 10 && gameField[row, col] != 0)
                     {
-                        printer.AppendFormat(" {0} ", field[row, col]);
+                        printer.AppendFormat(" {0} ", gameField[row, col]);
                     }
-                    else if (field[row, col] >= 10)
+                    else if (gameField[row, col] >= 10)
                     {
-                        printer.AppendFormat("{0} ", field[row, col]);
+                        printer.AppendFormat("{0} ", gameField[row, col]);
                     }
-                    else if (field[row, col] == 0)
+                    else if (gameField[row, col] == 0)
                     {
                         printer.AppendFormat("   ");
                     }
@@ -49,159 +47,197 @@
             Console.SetCursorPosition(0, 9);
             Console.Write(printer.ToString());
 
+        }      
+
+        static void GenerateTableNEW()
+        {
+            int[] zeroPos = new int[2] { 3, 3 };
+            int stepBack = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                int direction = randomGenerator.Next(1, 5);
+                if (direction != stepBack)
+                {
+                    stepBack = direction;
+
+                    if (direction == 1)
+                    {
+                        if (zeroPos[0] > 0)
+                        {
+                            int oldValue = gameField[zeroPos[0] - 1, zeroPos[1]];
+                            gameField[zeroPos[0] - 1, zeroPos[1]] = 0;
+                            gameField[zeroPos[0], zeroPos[1]] = oldValue;
+                            zeroPos[0] = zeroPos[0] - 1;
+                        }
+                        else
+                        {
+                            direction++;
+                        }
+                    }
+
+                    if (direction == 2)
+                    {
+                        if (zeroPos[1] < 3)
+                        {
+                            int oldValue = gameField[zeroPos[0], zeroPos[1] + 1];
+                            gameField[zeroPos[0], zeroPos[1] + 1] = 0;
+                            gameField[zeroPos[0], zeroPos[1]] = oldValue;
+                            zeroPos[1] = zeroPos[1] + 1;
+                        }
+                        else
+                        {
+                            direction++;
+                        }
+                    }
+
+                    if (direction == 3)
+                    {
+                        if (zeroPos[0] < 3)
+                        {
+                            int oldValue = gameField[zeroPos[0] + 1, zeroPos[1]];
+                            gameField[zeroPos[0] + 1, zeroPos[1]] = 0;
+                            gameField[zeroPos[0], zeroPos[1]] = oldValue;
+                            zeroPos[0] = zeroPos[0] + 1;
+                        }
+                        else
+                        {
+                            direction++;
+                        }
+                    }
+
+                    if (direction == 4)
+                    {
+                        if (zeroPos[1] > 0)
+                        {
+                            int oldValue = gameField[zeroPos[0], zeroPos[1] - 1];
+                            gameField[zeroPos[0], zeroPos[1] - 1] = 0;
+                            gameField[zeroPos[0], zeroPos[1]] = oldValue;
+                            zeroPos[1] = zeroPos[1] - 1;
+                        }
+                        else
+                        {
+                            direction--;
+                        }
+                    }
+
+                }
+                else
+                {
+                    i--;
+                }
+            }
+        
         }
 
-        static void GenerateTable()
+        static void MoveNEW(int number)
         {
-            counter = 0;
-
-            for (int i = 0; i < 1000; i++)
+            for (int rows = 0; rows < 4; rows++)
             {
-                int n = randomGenerator.Next(3);
-                if (n == 0)
+                for (int cols = 0; cols < 4; cols++)
                 {
-                    int nx = x - 1;
-                    int ny = y;
-                    if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
+                    if (gameField[rows, cols] == number)
                     {
-                        int temp = field[x, y];
-                        field[x, y] = field[nx, ny];
-                        field[nx, ny] = temp;
-                        x = nx;
-                        y = ny;
-                    }
-                    else
-                    {
-                        n++;
-                        i--;
-                    }
-                }
+                        if (CheckPositionUp(gameField, rows, cols))
+                        {
+                            gameField[rows, cols] = 0;
+                            gameField[rows - 1, cols] = number;
+                        }
+                        else if (CheckPositionDown(gameField, rows, cols))
+                        {
+                            gameField[rows, cols] = 0;
+                            gameField[rows + 1, cols] = number;
+                        }
+                        else if (CheckPositionLeft(gameField, rows, cols))
+                        {
+                            gameField[rows, cols] = 0;
+                            gameField[rows, cols - 1] = number;
+                        }
+                        else if (CheckPositionRight(gameField, rows, cols))
+                        {
+                            gameField[rows, cols] = 0;
+                            gameField[rows, cols + 1] = number;
+                        }
+                        else
+                        {
+                            DisplayIllegalAction();
+                            return;
+                        }
 
-                if (n == 1)
-                {
-                    int nx = x;
-                    int ny = y + 1;
-                    if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
-                    {
-                        int temp = field[x, y];
-                        field[x, y] = field[nx, ny];
-                        field[nx, ny] = temp;
-                        x = nx;
-                        y = ny;
-                    }
-                    else
-                    {
-                        n++;
-                        i--;
-                    }
-                }
-
-                if (n == 2)
-                {
-                    int nx = x + 1;
-                    int ny = y;
-                    if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
-                    {
-                        int temp = field[x, y];
-                        field[x, y] = field[nx, ny];
-                        field[nx, ny] = temp;
-                        x = nx;
-                        y = ny;
-                    }
-                    else
-                    {
-                        n++;
-                        i--;
-                    }
-                }
-
-                if (n == 3)
-                {
-                    int nx = x;
-                    int ny = y - 1;
-                    if (nx >= 0 && nx <= 3 && ny >= 0 && ny <= 3)
-                    {
-                        int temp = field[x, y];
-                        field[x, y] = field[nx, ny];
-                        field[nx, ny] = temp;
-                        x = nx;
-                        y = ny;
-                    }
-                    else
-                    {
-                        i--;
+                        counter++;
+                        return;
                     }
                 }
             }
+
+            return;
         }
 
-        public static bool Proverka(int i, int j)
+        static bool CheckPositionUp(int[,] gameField, int row, int col)
         {
-            if ((i == x - 1 || i == x + 1) && j == y)
+            if (row > 0)
             {
-                return true;
-            }
-
-            if ((i == x) && (j == y - 1 || j == y + 1))
-            {
-                return true;
+                if (gameField[row - 1, col] == 0)
+                {
+                    return true;
+                }
             }
 
             return false;
         }
 
-        public static void Move(int n)
+        static bool CheckPositionDown(int[,] gameField, int row, int col)
         {
-            int k = x;
-            int l = y;
-            bool flag = true;
-            for (int i = 0; i < 4; i++)
+            if (row < 3)
             {
-                if (flag)
+                if (gameField[row + 1, col] == 0)
                 {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (field[i, j] == n)
-                        {
-                            k = i;
-                            l = j;
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    break;
+                    return true;
                 }
             }
 
-            bool isInField = Proverka(k, l);
-            if (!isInField)
-            {
-                Console.SetCursorPosition(24, 15);
-                Console.Write("Illegal move!");
-                Thread.Sleep(1000);
-                Console.SetCursorPosition(24, 15);
-                Console.Write("             ");
-                Console.SetCursorPosition(0, 15);
-                Thread.Sleep(0);
-            }
-            else
-            {
-                int temp = field[k, l];
-                field[k, l] = field[x, y];
-                field[x, y] = temp;
-                x = k;
-                y = l;
-                counter++;
-                PrintTable();
-            }
+            return false;
         }
 
-        static bool Solved()
+        static bool CheckPositionLeft(int[,] gameField, int row, int col)
         {
-            if (field[3, 3] == 0)
+            if (col > 0)
+            {
+                if (gameField[row, col - 1] == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static bool CheckPositionRight(int[,] gameField, int row, int col)
+        {
+            if (col < 3)
+            {
+                if (gameField[row, col + 1] == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void DisplayIllegalAction()
+        {
+            Console.SetCursorPosition(24, 15);
+            Console.Write("Illegal move!");
+            Thread.Sleep(1000);
+            Console.SetCursorPosition(24, 15);
+            Console.Write("             ");
+            Console.SetCursorPosition(0, 15);
+            Thread.Sleep(0);
+        }
+
+        static bool isGameSolved()
+        {
+            if (gameField[3, 3] == 0)
             {
                 int number = 1;
                 for (int row = 0; row < FIELD_ROWS; row++)
@@ -210,7 +246,7 @@
                     {
                         if (number <= 15)
                         {
-                            if (field[row, col] == number)
+                            if (gameField[row, col] == number)
                             {
                                 number++;
                             }
@@ -232,7 +268,7 @@
 
         static void RestartGame()
         {
-            GenerateTable();
+            GenerateTableNEW();
             PrintTable();
         }
 
@@ -274,11 +310,11 @@
             bool gameInProgress = true;
             while (gameInProgress)
             {
-                GenerateTable();
+               GenerateTableNEW();
                 PrintGameInitializeInfo();
                 PrintTable();
-                bool isGameSolved = Solved();
-                while (!isGameSolved)
+                bool isSolved = isGameSolved();
+                while (!isSolved)
                 {
                     Console.Write("Enter a number to move: ");
                     string command = Console.ReadLine();
@@ -291,18 +327,13 @@
                     if (isMoveCommand)
                     {
                         if (number >= 1 && number <= 15)
-                        {
-                            Move(number);
+                        {                       
+                            MoveNEW(number);
+                            PrintTable();
                         }
                         else
                         {
-                            Console.SetCursorPosition(24, 15);
-                            Console.Write("Illegal move!");
-                            Thread.Sleep(1000);
-                            Console.SetCursorPosition(24, 15);
-                            Console.Write("             ");
-                            Console.SetCursorPosition(0, 15);
-                            Thread.Sleep(0);
+                            DisplayIllegalAction();
                         }
                     }
                     else
@@ -333,10 +364,10 @@
                         }
                     }
 
-                    isGameSolved = Solved();
+                    isSolved = isGameSolved();
                 }
 
-                if (isGameSolved)
+                if (isSolved)
                 {
                     Console.WriteLine("Congratulations! You won the game in {0} moves.", counter);
 
