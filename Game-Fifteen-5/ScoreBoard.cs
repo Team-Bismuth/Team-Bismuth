@@ -5,6 +5,7 @@ using System.Text;
 
 namespace IgraS15
 {
+    //Return top 5 players and their results
     public static class ScoreBoard
     {
         private static List<Player> players = new List<Player>();
