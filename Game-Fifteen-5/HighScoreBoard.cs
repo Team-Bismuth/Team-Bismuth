@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 
-namespace IgraS15
+namespace Game_Fifteen
 {
     public sealed class HighScoreBoard
     {
@@ -31,7 +31,7 @@ namespace IgraS15
         {
             for (int index = 0; index < this.players.Count(); index++)
             {
-                if (index > TopScoresToKeep-1)
+                if (index > TopScoresToKeep - 1)
                 {
                     this.players.Remove(players[index]);
                 }
@@ -42,12 +42,20 @@ namespace IgraS15
         {
             StringBuilder result = new StringBuilder();
             result.AppendLine("Scoreboard:");
-            foreach (Player player in this.players)
+            if (this.players == null || this.players.Count == 0)
             {
-                result.Append((this.players.IndexOf(player) + 1).ToString());
-                result.Append(". " + player.ToString());
-                result.AppendLine();
+                result.AppendLine("EMPTY");
             }
+            else
+            {
+                foreach (Player player in this.players)
+                {
+                    result.Append((this.players.IndexOf(player) + 1).ToString());
+                    result.Append(". " + player.ToString());
+                    result.AppendLine();
+                }
+            }
+
             return result.ToString();
         }
     }

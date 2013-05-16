@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IgraS15
+namespace Game_Fifteen
 {
     class Engine
     {
@@ -16,6 +16,14 @@ namespace IgraS15
 
         private GameField gameField;
         private int movesCounter;
+        private HighScoreBoard highScore;
+
+        public HighScoreBoard HighScore
+        {
+            get { return highScore; }
+            set { highScore = value; }
+        }
+        
 
         public int MovesCounter
         {
@@ -32,12 +40,13 @@ namespace IgraS15
         
         public Engine()
         {
-            this.GameField = gameField;
+            this.GameField = new GameField();
             this.MovesCounter = 0;
+            this.HighScore = new HighScoreBoard();
         }
 
 
-        public void GenerateTableNEW()
+        public void GenerateTable()
         {
             int[] zeroPos = new int[2] { 3, 3 };
             int stepBack = 0;
@@ -117,7 +126,7 @@ namespace IgraS15
 
         }
 
-        public void MoveNEW(int number)
+        public void Move(int number)
         {
             for (int rows = 0; rows < 4; rows++)
             {
@@ -147,7 +156,7 @@ namespace IgraS15
                         }
                         else
                         {
-                            Command.DisplayIllegalAction();
+                            Command.DisplayIllegalBlinkMessage(24, 16, "Illegal Move!", 0, 16);
                             return;
                         }
 
@@ -245,7 +254,9 @@ namespace IgraS15
 
         public void RestartGame()
         {
-            GenerateTableNEW();
+            this.gameField=new GameField();
+            this.GenerateTable();
+            Console.SetCursorPosition(0, 9);
             this.gameField.PrintField();
         }
 
@@ -254,8 +265,9 @@ namespace IgraS15
             bool gameInProgress = true;
             while (gameInProgress)
             {
-                GenerateTableNEW();
-                PrintGameInitializeInfo();
+                GenerateTable();
+                Command.PrintGameInitializeInfo();
+                Console.SetCursorPosition(0, 9);
                 this.gameField.PrintField();
                 bool isSolved = isGameSolved();
                 while (!isSolved)
@@ -264,7 +276,7 @@ namespace IgraS15
                     string command = Console.ReadLine();
                     int number = 0;
 
-                    Console.SetCursorPosition(24, 15);
+                    Console.SetCursorPosition(24, 16);
                     Console.Write(new string(' ', command.Length));
 
                     bool isMoveCommand = int.TryParse(command, out number);
@@ -272,39 +284,36 @@ namespace IgraS15
                     {
                         if (number >= 1 && number <= 15)
                         {
-                            MoveNEW(number);
+                            Move(number);
+                            Console.SetCursorPosition(0, 9);
                             this.gameField.PrintField();
                         }
                         else
                         {
-                            DisplayIllegalAction();
+                            Command.DisplayIllegalBlinkMessage(24, 16, "Illegal Move!", 0, 16);
                         }
                     }
                     else
                     {
-                        if (command == "exit")
+                        if (Command.CommandType(command)==Command.Commands.exit.ToString())
                         {
-                            PrintGameAboutInfo();
+                            Console.SetCursorPosition(0, 17);
+                            Command.PrintGameAboutInfo();
                             gameInProgress = false;
                             break;
                         }
-                        else if (command == "restart")
+                        else if (Command.CommandType(command) == Command.Commands.restart.ToString())
                         {
                             RestartGame();
                         }
-                        else if (command == "top")
+                        else if (Command.CommandType(command) == Command.Commands.top.ToString())
                         {
-                            PrintTop();
+                            Console.SetCursorPosition(0, 17);
+                            Console.WriteLine(this.highScore.ToString());
                         }
                         else
                         {
-                            Console.SetCursorPosition(24, 15);
-                            Console.Write("Illegal command!");
-                            Thread.Sleep(1000);
-                            Console.SetCursorPosition(24, 15);
-                            Console.Write("                ");
-                            Console.SetCursorPosition(0, 15);
-                            Thread.Sleep(0);
+                            Command.DisplayIllegalBlinkMessage(24, 16, "Illegal Command!", 0, 16);
                         }
                     }
 
@@ -313,34 +322,16 @@ namespace IgraS15
 
                 if (isSolved)
                 {
-                    Console.WriteLine("Congratulations! You won the game in {0} moves.", counter);
+                    Console.WriteLine("Congratulations! You won the game in {0} moves.", this.movesCounter);
 
                     Console.Write("Please enter your name for the top scoreboard: ");
 
                     string nickname = Console.ReadLine();
 
-                    string result = counter + " moves by " + nickname;
+                    Player player = new Player(nickname, this.movesCounter);
 
-                    if (topCount < 5)
-                    {
-                        topScorers[topCount] = result;
-
-                        topCount++;
-
-                        Array.Sort(topScorers);
-                    }
-                    else
-                    {
-                        for (int i = TOP_SCORES_TO_KEEP - 1; i >= 0; i++)
-                        {
-                            if (topScorers[i].CompareTo(result) <= 0)
-                            {
-                                AddAndSort(i, result);
-                            }
-                        }
-                    }
-
-                    PrintTop();
+                    this.highScore.AddPlayer(player);
+                    this.highScore.ToString();
                 }
             }
         }

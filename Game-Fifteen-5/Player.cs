@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace IgraS15
+namespace Game_Fifteen
 {
     public class Player : IComparable
     {
