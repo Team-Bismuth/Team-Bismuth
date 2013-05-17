@@ -3,7 +3,8 @@
     using System;
     using System.Text;
     using System.Threading;
-    public class Program
+
+    public class GameFifteenMain
     {
         public static void Main()
         {

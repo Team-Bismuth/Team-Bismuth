@@ -1,16 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.ObjectModel;
-
 namespace Game_Fifteen
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
+
     public sealed class HighScoreBoard
     {
         private const int TopScoresToKeep = 5;
 
         private List<Player> players;
+
+        public HighScoreBoard()
+        {
+            this.players = new List<Player>();
+        }
 
         public IList<Player> Players
         {
@@ -24,18 +28,7 @@ namespace Game_Fifteen
         {
             this.players.Add(player);
             this.players.Sort();
-            DeleteAllExceptTopPlayers();
-        }
-
-        private void DeleteAllExceptTopPlayers()
-        {
-            for (int index = 0; index < this.players.Count(); index++)
-            {
-                if (index > TopScoresToKeep - 1)
-                {
-                    this.players.Remove(players[index]);
-                }
-            }
+            this.DeleteAllExceptTopPlayers();
         }
 
         public override string ToString()
@@ -57,6 +50,17 @@ namespace Game_Fifteen
             }
 
             return result.ToString();
+        }
+
+        private void DeleteAllExceptTopPlayers()
+        {
+            for (int index = 0; index < this.players.Count(); index++)
+            {
+                if (index > TopScoresToKeep - 1)
+                {
+                    this.players.Remove(this.players[index]);
+                }
+            }
         }
     }
 }

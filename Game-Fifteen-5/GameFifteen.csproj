@@ -47,7 +47,7 @@
     <Compile Include="Engine.cs" />
     <Compile Include="GameField.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="GameFifteenMain.cs" />
     <Compile Include="HighScoreBoard.cs" />
   </ItemGroup>
   <ItemGroup>

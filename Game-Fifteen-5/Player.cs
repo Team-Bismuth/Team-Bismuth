@@ -1,23 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-
 namespace Game_Fifteen
 {
+    using System;
+
     public class Player : IComparable
     {
         public const string UnnamedPlayer = "Anonymous";
 
         private string name;
         private int moves;
+       
+        public Player(string name, int moves)
+        {
+            this.Name = name;
+            this.Moves = moves;
+        }
 
         public string Name
         {
-            get 
+            get
             {
-                return name;
+                return this.name;
             }
 
             set
@@ -35,21 +37,15 @@ namespace Game_Fifteen
 
         public int Moves
         {
-            get 
+            get
             {
-                return this.moves; 
+                return this.moves;
             }
 
             set
             {
                 this.moves = value;
             }
-        }
-
-        public Player(string name, int moves)
-        {
-            this.Name = name;
-            this.Moves = moves;
         }
 
         public int CompareTo(object player)
